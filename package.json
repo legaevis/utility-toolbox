@@ -1,0 +1,75 @@
+{
+  "name": "utility-toolbox",
+  "productName": "Utility Toolbox",
+  "version": "0.20.0",
+  "description": "Small tools for everyday digital tasks — all in one place.",
+  "private": true,
+  "main": "dist-electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k \"vite\" \"npm:dev:electron\"",
+    "dev:electron": "wait-on tcp:5173 && npm run build:main && cross-env VITE_DEV_SERVER_URL=http://localhost:5173 electron .",
+    "build:main": "esbuild electron/main.ts electron/preload.ts --bundle --platform=node --external:electron --outdir=dist-electron --out-extension:.js=.cjs",
+    "build": "tsc --noEmit && vite build && npm run build:main",
+    "package:mac": "npm run build && electron-builder --mac",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "package:win": "npm run build && electron-builder --win"
+  },
+  "build": {
+    "appId": "com.legaev.utility-toolbox",
+    "productName": "Utility Toolbox",
+    "files": [
+      "dist/**",
+      "dist-electron/**",
+      "build/icon.icns",
+      "build/icon.ico"
+    ],
+    "directories": {
+      "output": "release"
+    },
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        "dmg",
+        "zip"
+      ],
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "concurrently": "^9.1.0",
+    "cross-env": "^7.0.3",
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8",
+    "esbuild": "^0.24.0",
+    "jsdom": "^30.0.1",
+    "playwright": "^1.62.1",
+    "typescript": "^5.6.3",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8",
+    "wait-on": "^8.0.1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/legaevis/utility-toolbox.git"
+  }
+}

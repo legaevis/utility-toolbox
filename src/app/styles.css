@@ -1,0 +1,1897 @@
+/*
+ * Design system from the Figma mockup «design 3.0» (Utility Toolbox,
+ * node 88-13145). Committed LIGHT theme; Inter with system fallback
+ * (offline — no webfonts).
+ *
+ * Palette (from the design 3.0 frames):
+ *   window/app bg #ffffff     sidebar bg   #ffffff
+ *   list column   #fafbfc     content bg   #ffffff
+ *   elevated      #f2f3f5     border       #e8eaee
+ *   text primary  #1e1f24     secondary    #6f7480     muted #9aa0aa
+ *   accent (soft periwinkle) #7c9cf4      active nav pill same
+ *   dark pill (Add entry)    #17181c      danger #e5484d   star #f7b500
+ */
+
+:root {
+  --bg: #ffffff;
+  --bg-sidebar: #ffffff;
+  --bg-list: #fafbfc;
+  --bg-content: #ffffff;
+  --bg-elevated: #f2f3f5;
+  --bg-panel: #fbfbfc;
+  --border: #e8eaee;
+  --text: #1e1f24;
+  --text-secondary: #6f7480;
+  --text-muted: #9aa0aa;
+  --accent: #7c9cf4;
+  --accent-active-card: #7c9cf4;
+  --accent-text: #ffffff;
+  --danger: #e5484d;
+  --star: #f7b500;
+  --gradient-from: #f6f8fc;
+  --search-bg: #f2f3f5;
+  --pill-bg: #17181c;
+  --pill-text: #ffffff;
+  --active-item-bg: #7c9cf4;
+  --active-item-text: #ffffff;
+  --chip-star-active-bg: #fff2cc;
+  --switch-off: #d9dde3;
+  --shadow-card: 0 1px 2px rgba(30, 31, 36, 0.05);
+  --shadow-pop: 0 12px 32px rgba(30, 31, 36, 0.14);
+  --glass-bg: rgba(255, 255, 255, 0.78);
+  --radius-s: 8px;
+  --radius-m: 12px;
+  --radius-l: 16px;
+  --radius-xl: 20px;
+  --radius-pill: 30px;
+}
+
+/* Dark theme — the design-3.0 palette translated to dark surfaces.
+   Stamped as data-theme="dark" on <html> by App.tsx (Settings → Theme:
+   system / light / dark; 'system' follows the OS live). */
+:root[data-theme='dark'] {
+  --bg: #131316;
+  --bg-sidebar: #1a1a1f;
+  --bg-list: #17171c;
+  --bg-content: #131316;
+  --bg-elevated: #26262c;
+  --bg-panel: #1a1a1f;
+  --border: #2b2b31;
+  --text: #f2f3f7;
+  --text-secondary: #9ba0ab;
+  --text-muted: #686d78;
+  --accent: #7c9cf4;
+  --accent-active-card: #7c9cf4;
+  --accent-text: #ffffff;
+  --danger: #ff6369;
+  --star: #f7b500;
+  --gradient-from: #191b22;
+  --search-bg: #26262c;
+  --pill-bg: #f2f3f5;
+  --pill-text: #17181c;
+  --active-item-bg: #7c9cf4;
+  --active-item-text: #ffffff;
+  --chip-star-active-bg: #33290a;
+  --switch-off: #3a3a40;
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 16px 40px rgba(0, 0, 0, 0.5);
+  --glass-bg: rgba(24, 24, 29, 0.74);
+}
+
+/* macOS liquid glass: the window has vibrancy (see electron/main.ts), so
+   the big background layers go translucent and the desktop shows through.
+   Placed AFTER both theme blocks so it wins in either theme. */
+:root.is-mac {
+  --bg: rgba(255, 255, 255, 0.72);
+  --bg-content: rgba(255, 255, 255, 0.55);
+  --bg-list: rgba(250, 251, 252, 0.55);
+}
+
+:root.is-mac[data-theme='dark'] {
+  --bg: rgba(20, 20, 24, 0.66);
+  --bg-content: rgba(19, 19, 22, 0.52);
+  --bg-list: rgba(23, 23, 28, 0.55);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+  color: var(--text);
+  background: var(--bg);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: flex;
+  height: 100%;
+}
+
+.empty-hint {
+  color: var(--text-secondary);
+  padding: 8px 4px;
+}
+
+/* ---- Sidebar (186px, categories only) ---- */
+
+.sidebar {
+  width: 224px;
+  min-width: 224px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  background: var(--bg-sidebar);
+  padding: 24px 16px;
+  overflow: hidden;
+}
+
+.app-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  padding: 5px 17px;
+  /* Room for macOS traffic lights with hiddenInset title bar. */
+  margin-top: 14px;
+  white-space: nowrap;
+}
+
+.nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.nav-section-label {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  padding: 0 16px;
+  margin-bottom: -16px;
+}
+
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 16px;
+  border: none;
+  border-radius: var(--radius-s);
+  background: none;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.nav-item:hover {
+  background: rgba(127, 127, 127, 0.1);
+  color: var(--text);
+}
+
+.nav-item.active {
+  background: var(--active-item-bg);
+  color: var(--active-item-text);
+  font-weight: 600;
+  border-radius: 10px;
+}
+
+.nav-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* ---- Middle column: tool list (274px) ---- */
+
+.tool-list-column {
+  width: 274px;
+  min-width: 274px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: var(--bg-list);
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  padding: 20px 18px;
+  overflow: hidden;
+}
+
+.search-bar {
+  position: relative;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 12px 40px 12px 16px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
+  background: var(--search-bg);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-bar input::placeholder {
+  color: var(--text-secondary);
+}
+
+.search-bar input:focus {
+  box-shadow: 0 0 0 1px var(--accent);
+}
+
+.search-icon {
+  position: absolute;
+  right: 14px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  display: inline-flex;
+  pointer-events: none;
+}
+
+.tool-cards {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.tool-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius-l);
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.tool-card:hover {
+  background: rgba(127, 127, 127, 0.08);
+}
+
+.tool-card.active {
+  background: var(--accent-active-card);
+}
+
+.tool-card-name {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.tool-card-desc {
+  color: var(--text-muted);
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.tool-card.active .tool-card-name {
+  color: #fff;
+}
+
+.tool-card.active .tool-card-desc {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* ---- Content pane ---- */
+
+.content {
+  flex: 1;
+  min-width: 0;
+  background-color: var(--bg-content);
+  background-image: linear-gradient(180deg, var(--gradient-from) 0%, var(--bg-content) 640px);
+  background-repeat: no-repeat;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.empty-state {
+  margin: auto;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.empty-state h2 {
+  color: var(--text);
+  margin: 0 0 6px;
+}
+
+.empty-state p {
+  margin: 0;
+}
+
+.tool-shell {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+}
+
+.tool-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+  background: none;
+}
+
+.tool-toolbar h2 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.tool-toolbar p {
+  margin: 2px 0 0;
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.chip-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  border: none;
+  border-radius: 40px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.chip-btn:hover {
+  color: var(--text);
+}
+
+.chip-btn.star.active {
+  background: var(--chip-star-active-bg);
+  color: var(--star);
+}
+
+.tool-body {
+  flex: 1;
+  padding: 32px 24px 40px;
+  width: 100%;
+  /* Stretch the tool root so the sticky footer is anchored to the
+     window bottom even when the tool content is short. */
+  display: flex;
+  flex-direction: column;
+}
+
+.tool-body > .generic-tool {
+  flex: 1;
+}
+
+/* ---- Generic tool layout ---- */
+
+.generic-tool {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.field-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 20px;
+}
+
+.field-header label {
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.meta-line {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.text-area {
+  width: 100%;
+  min-height: 120px;
+  padding: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--bg-panel);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.45;
+  resize: vertical;
+  outline: none;
+}
+
+.text-area::placeholder {
+  color: var(--text-secondary);
+}
+
+.text-area:focus {
+  border-color: var(--accent);
+}
+
+.text-area.output {
+  background: var(--bg);
+}
+
+.text-area.small {
+  min-height: 80px;
+}
+
+.text-area.tall {
+  min-height: 260px;
+}
+
+.mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.action-row {
+  display: flex;
+  gap: 8px;
+}
+
+/* ---- Buttons: pill style per mockup ---- */
+
+.btn {
+  white-space: nowrap;
+  padding: 10px 20px;
+  border: none;
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn-dark {
+  background: var(--pill-bg);
+  color: var(--pill-text);
+}
+
+.btn-danger {
+  background: var(--danger);
+  color: #fff;
+}
+
+.btn-ghost {
+  border: none;
+  background: none;
+  color: var(--text-secondary);
+  padding: 4px 8px;
+  border-radius: 8px;
+}
+
+.btn-ghost:hover:not(:disabled) {
+  color: var(--accent);
+  filter: none;
+}
+
+.btn-mode {
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+}
+
+.btn-mode.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.btn-link {
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  padding: 4px 8px;
+  cursor: pointer;
+}
+
+.btn-cta {
+  padding: 11px 26px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 50px;
+}
+
+.icon-btn {
+  display: inline-flex;
+  align-items: center;
+  border: none;
+  background: none;
+  color: var(--danger);
+  cursor: pointer;
+  padding: 4px;
+  opacity: 0.85;
+}
+
+.icon-btn:hover {
+  opacity: 1;
+}
+
+/* ---- Options ---- */
+
+.options-panel {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  padding: 14px 16px;
+}
+
+.options-title {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+}
+
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 8px 18px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text);
+}
+
+.option-select,
+.option-text {
+  justify-content: space-between;
+}
+
+.option-text {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.option-text span {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.option input[type='text'],
+.option select,
+.option input[type='date'],
+.option input[type='time'],
+.settings select,
+.settings input[type='text'] {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  outline: none;
+}
+
+.option input:focus,
+.option select:focus {
+  border-color: var(--accent);
+}
+
+/* ---- Switches (every checkbox in the app renders as an iOS-style toggle) ---- */
+
+input[type='checkbox'] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 36px;
+  min-width: 36px;
+  height: 21px;
+  margin: 0;
+  border: none;
+  border-radius: 999px;
+  background: var(--switch-off);
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  transition: background 0.18s ease;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+input[type='checkbox']::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.18s ease;
+}
+
+input[type='checkbox']:checked {
+  background: var(--accent);
+}
+
+input[type='checkbox']:checked::after {
+  transform: translateX(15px);
+}
+
+input[type='checkbox']:focus-visible {
+  box-shadow: 0 0 0 2px var(--bg), 0 0 0 4px var(--accent);
+}
+
+/* ---- Two-column and compare ---- */
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.compare-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.compare-section .text-area {
+  min-height: 110px;
+}
+
+/* ---- Stats (character counter) ---- */
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.stat-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  padding: 16px;
+  text-align: center;
+}
+
+.stat-value {
+  font-size: 22px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-label {
+  color: var(--text-secondary);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+/* ---- Daily report (per mockup) ---- */
+
+.entry-add {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.entry-add .text-area {
+  width: 100%;
+}
+
+.date-range {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  color: var(--text-secondary);
+}
+
+.date-range input {
+  padding: 6px 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.entries-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.entry-group {
+  border-radius: var(--radius-xl);
+  background: var(--bg-panel);
+  border: 1px solid var(--border);
+  padding: 20px;
+  margin-bottom: 8px;
+}
+
+.entry-group h4 {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--text-secondary);
+}
+
+.entry {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  padding: 5px 0;
+}
+
+.entry-time {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  padding-top: 1px;
+  white-space: nowrap;
+}
+
+.entry-text {
+  flex: 1;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 14px;
+}
+
+.entry-edit {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.report-footer {
+  justify-content: flex-end;
+}
+
+/* ---- Report view (clickable links) ---- */
+
+.report-view {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xl);
+  background: var(--bg-panel);
+  padding: 16px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 60px;
+  user-select: text;
+  -webkit-user-select: text;
+  cursor: text;
+  line-height: 1.5;
+}
+
+.report-line {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.report-bullet {
+  flex-shrink: 0;
+}
+
+.report-line span:last-child {
+  word-break: break-word;
+}
+
+.entry-text a,
+.report-view a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.entry-text a:hover,
+.report-view a:hover {
+  text-decoration: underline;
+}
+
+/* ---- Converters & time tools ---- */
+
+.converter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.converter-row .option-text {
+  min-width: 140px;
+}
+
+.swap-btn {
+  margin-bottom: 2px;
+}
+
+.converter-result {
+  min-height: 52px;
+  justify-content: center;
+}
+
+.converter-main {
+  font-size: 17px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.converter-composite {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.clock-add {
+  display: flex;
+  gap: 8px;
+}
+
+.clock-add .search-input {
+  max-width: 320px;
+  padding: 10px 14px;
+  border: none;
+  border-radius: var(--radius-m);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-family: inherit;
+  font-size: 14px;
+  outline: none;
+  flex: 1;
+}
+
+.clock-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.clock-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+}
+
+.report-view .clock-row {
+  border: none;
+  background: none;
+  padding: 4px 0;
+}
+
+.clock-city {
+  display: flex;
+  flex-direction: column;
+  min-width: 160px;
+}
+
+.clock-name {
+  font-weight: 600;
+}
+
+.clock-offset {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.clock-time {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.clock-hm {
+  font-size: 20px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.clock-date {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.clock-actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* ---- Settings ---- */
+
+.settings {
+  padding: 32px 24px;
+  max-width: 960px;
+  width: 100%;
+}
+
+.settings h2 {
+  margin: 0 0 16px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.settings section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  padding: 8px 20px;
+  margin-bottom: 16px;
+}
+
+.settings section h3 {
+  margin: 12px 0 2px;
+  font-size: 14px;
+}
+
+.settings-hint {
+  color: var(--text-secondary);
+  margin: 4px 0 10px;
+  font-size: 13px;
+}
+
+.settings-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 16px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border);
+}
+
+.settings-row > .btn,
+.settings-row select,
+.settings-row input[type='text'] {
+  flex-shrink: 0;
+}
+
+.settings section .settings-row:first-child {
+  border-top: none;
+}
+
+.settings-row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.settings-row-text small {
+  color: var(--text-secondary);
+}
+
+.sidebar-controls {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* ---- Dialog ---- */
+
+.dialog-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(30, 31, 36, 0.32);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.dialog {
+  width: 380px;
+  background: var(--bg-list);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  padding: 20px;
+  box-shadow: var(--shadow-pop);
+}
+
+.dialog h3 {
+  margin: 0 0 8px;
+}
+
+.dialog p {
+  margin: 0 0 16px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+.dialog-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+/* ---- Mockup v2: mode bar, options card, IO grid, footer, panels ---- */
+
+.nav-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Tabs row (39-1010): standalone pills right under the toolbar, wrapping
+   into centered rows when they don't fit. */
+.mode-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 0 4px;
+}
+
+.mode-bar .mode-btn {
+  background: var(--pill-bg);
+  color: var(--pill-text);
+}
+
+.mode-bar .mode-btn:hover {
+  color: var(--accent);
+}
+
+.mode-bar .mode-btn.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.mode-bar .mode-btn.active:hover {
+  color: var(--accent-text);
+}
+
+.mode-btn {
+  border: none;
+  background: none;
+  color: var(--text);
+  font-family: inherit;
+  font-size: 13px;
+  padding: 8px 12px;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.mode-btn:hover {
+  color: var(--accent);
+}
+
+.mode-btn.active {
+  background: var(--accent);
+  color: var(--accent-text);
+  font-weight: 600;
+}
+
+.mode-btn.active:hover {
+  color: var(--accent-text);
+}
+
+.options-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  padding: 16px;
+}
+
+.options-card .options-panel {
+  border: none;
+  background: none;
+  padding: 0;
+}
+
+.options-card-action {
+  margin-top: 16px;
+}
+
+.io-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.io-grid .text-area {
+  min-height: 246px;
+  resize: none;
+}
+
+.io-single .text-area {
+  min-height: 200px;
+  width: 100%;
+}
+
+.tool-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 10px;
+  margin: auto -24px -40px;
+  padding: 16px 24px;
+  border-top: 1px solid var(--border);
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+}
+
+.tool-footer-right {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 0;
+}
+
+.btn-secondary {
+  background: var(--pill-bg);
+  color: var(--pill-text);
+}
+
+.btn-cta {
+  height: 56px;
+  padding: 10px 40px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 50px;
+}
+
+/* Generic tool fills the pane so the footer sits at the bottom. */
+.generic-tool {
+  min-height: 100%;
+}
+
+/* ---- Full-width panels: Settings / Archive / Info ---- */
+
+.panel-view {
+  padding: 32px 36px 48px;
+  max-width: 960px;
+  width: 100%;
+}
+
+.panel-view h2 {
+  margin: 0 0 6px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.archive-day-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.archive-day-header h4 {
+  margin: 0;
+}
+
+.info-view section {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  padding: 4px 20px 16px;
+  margin-top: 16px;
+  max-width: 560px;
+}
+
+.info-view section h3 {
+  font-size: 14px;
+  margin: 14px 0 6px;
+}
+
+.info-view section p {
+  margin: 0;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.info-tagline {
+  color: var(--text-secondary);
+  margin: 0 0 8px;
+}
+
+/* ---- Tool toolbar chips, help dialog, tool archive ---- */
+
+.tool-toolbar-chips {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.chip-btn.active {
+  color: var(--accent);
+}
+
+.chip-btn.archive.active {
+  background: var(--accent);
+  color: var(--accent-text);
+}
+
+.archived-banner {
+  margin: 16px 24px 0;
+  padding: 10px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-m);
+  background: var(--bg-panel);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.help-dialog {
+  width: 520px;
+  max-width: calc(100vw - 80px);
+}
+
+.help-body {
+  max-height: 50vh;
+  overflow-y: auto;
+  margin-bottom: 16px;
+}
+
+.help-body p {
+  margin: 0 0 10px;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.help-body p:first-child {
+  color: var(--text);
+}
+
+.archive-section-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 24px 0 4px;
+}
+
+.archived-tool-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  margin-bottom: 8px;
+}
+
+.archived-tool-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tool-footer.report-footer {
+  justify-content: center;
+}
+
+/* ---------------------------------------------------------------------------
+   Typograf — symbols quick-copy panel
+   --------------------------------------------------------------------------- */
+
+.typograf-tabs {
+  margin-bottom: 4px;
+}
+
+.symbols-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  min-height: 0;
+  flex: 1;
+  padding-bottom: 16px;
+}
+
+.symbols-panel .search-bar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: transparent;
+}
+
+.symbol-cat-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 12px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.symbol-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 8px;
+}
+
+.symbol-tile {
+  position: relative;
+}
+
+.symbol-btn {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 0.15s ease, background 0.15s ease;
+  min-height: 84px;
+}
+
+.symbol-btn:hover {
+  border-color: var(--accent);
+}
+
+.symbol-char {
+  font-size: 24px;
+  line-height: 1.2;
+  min-height: 29px;
+}
+
+/* «Copied» overlays the glyph — the tile keeps its size, no grid shift. */
+.symbol-copied {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  min-height: 29px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.1s ease;
+}
+
+.symbol-btn {
+  position: relative;
+}
+
+.symbol-btn.copied .symbol-char {
+  opacity: 0;
+}
+
+.symbol-btn.copied .symbol-copied {
+  opacity: 1;
+}
+
+.symbol-name {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+  line-height: 1.25;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.symbol-star {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  border: none;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+.symbol-tile:hover .symbol-star,
+.symbol-star.active {
+  opacity: 1;
+}
+
+.symbol-star.active {
+  color: var(--accent);
+}
+
+.symbol-star svg {
+  width: 14px;
+  height: 14px;
+}
+
+/* ---------------------------------------------------------------------------
+   Design 3.0: navigation overlay + top-left toggle (all window widths)
+   --------------------------------------------------------------------------- */
+
+/* Translucent top fade: when the content scrolls up, it dissolves under
+   the system-button zone instead of colliding with it. */
+.top-fade {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 64px;
+  z-index: 45;
+  pointer-events: none;
+  background: linear-gradient(180deg, var(--bg) 8%, transparent);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  -webkit-mask-image: linear-gradient(180deg, #000 30%, transparent);
+  mask-image: linear-gradient(180deg, #000 30%, transparent);
+}
+
+/* macOS: draggable strip along the window top (traffic-light zone). */
+.drag-strip {
+  display: none;
+}
+
+.is-mac .drag-strip {
+  display: block;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 30px;
+  z-index: 40;
+  -webkit-app-region: drag;
+}
+
+/* The nav toggle. On macOS it sits BELOW the traffic lights — the system
+   buttons must never overlap it. */
+.nav-toggle-btn {
+  position: fixed;
+  top: 12px;
+  left: 14px;
+  z-index: 70;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: 11px;
+  background: var(--bg-sidebar);
+  color: var(--text);
+  cursor: pointer;
+  box-shadow: var(--shadow-card);
+  -webkit-app-region: no-drag;
+}
+
+.is-mac .nav-toggle-btn {
+  top: 40px;
+}
+
+.nav-toggle-btn:hover {
+  border-color: var(--accent);
+}
+
+/* Content clearance: room for the toggle in every view's header. */
+.tool-toolbar {
+  padding-left: 68px;
+}
+
+.settings,
+.panel-view {
+  padding-left: 68px;
+}
+
+.is-mac .content {
+  padding-top: 28px;
+}
+
+/* The overlay itself: sidebar + flyout column over the content, with the
+   liquid-glass blur. */
+.nav-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(30, 31, 36, 0.22);
+}
+
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 55;
+  display: flex;
+  background: var(--glass-bg);
+  -webkit-backdrop-filter: blur(28px) saturate(160%);
+  backdrop-filter: blur(28px) saturate(160%);
+  border-right: 1px solid var(--border);
+  box-shadow: var(--shadow-pop);
+  animation: nav-overlay-in 0.16s ease;
+}
+
+@keyframes nav-overlay-in {
+  from {
+    transform: translateX(-16px);
+    opacity: 0;
+  }
+
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.nav-overlay .sidebar {
+  background: transparent;
+}
+
+.nav-overlay .tool-list-column {
+  background: transparent;
+  border-right: none;
+  border-left: 1px solid var(--border);
+}
+
+/* Room for the traffic lights + the toggle at the overlay top. */
+.nav-overlay .sidebar .app-title {
+  margin-top: 44px;
+}
+
+.is-mac .nav-overlay .sidebar .app-title {
+  margin-top: 74px;
+}
+
+.nav-overlay .tool-list-column {
+  padding-top: 56px;
+}
+
+.is-mac .nav-overlay .tool-list-column {
+  padding-top: 86px;
+}
+
+@media (max-width: 640px) {
+  .nav-overlay .tool-list-column {
+    width: 200px;
+    min-width: 200px;
+  }
+}
+
+@media (max-width: 1080px) {
+  .tool-list-column {
+    width: 232px;
+    min-width: 232px;
+  }
+}
+
+@media (max-width: 820px) {
+  .io-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .io-grid .text-area {
+    min-height: 160px;
+  }
+
+  .tool-list-column {
+    width: 200px;
+    min-width: 200px;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Typograf 39-1010: top row (language + live switch) and settings hints
+   --------------------------------------------------------------------------- */
+
+/* Toolbar slot: tools can portal their own controls next to the chips
+   (Typograf's «Живая обработка» switch, per 39-108). */
+.toolbar-slot {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.toolbar-live {
+  white-space: nowrap;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+/* Sub-navigation column header (39-108): section name + description. */
+.subnav-header {
+  padding: 14px 16px 0;
+}
+
+.subnav-header h3 {
+  margin: 0 0 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.subnav-header p {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* Typograf settings: language row (with Reset opposite) + grouped rules. */
+.typograf-lang-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.typograf-lang-row .option-select {
+  min-width: 280px;
+  max-width: 360px;
+}
+
+.rule-group {
+  margin-bottom: 16px;
+}
+
+.rule-group:last-child {
+  margin-bottom: 0;
+}
+
+.rule-group-title {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin: 0 0 8px;
+}
+
+.rule-switch {
+  gap: 10px;
+}
+
+.rule-hint {
+  position: relative;
+  display: inline-flex;
+  color: var(--text-muted);
+  cursor: help;
+  flex-shrink: 0;
+}
+
+.rule-hint svg {
+  width: 14px;
+  height: 14px;
+}
+
+.rule-hint::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: 250px;
+  padding: 9px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.45;
+  white-space: normal;
+  text-align: left;
+  box-shadow: var(--shadow-pop);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.12s ease;
+  pointer-events: none;
+  z-index: 40;
+}
+
+.rule-hint:hover::after {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Footer buttons shrink before they wrap on narrow windows. */
+@media (max-width: 1060px) {
+  .btn-cta {
+    height: 48px;
+    padding: 10px 24px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 860px) {
+  .btn-cta {
+    height: 42px;
+    padding: 8px 18px;
+    font-size: 13px;
+  }
+
+  .tool-footer {
+    padding: 18px 16px;
+  }
+}
+
+.info-version {
+  margin-top: 28px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+/* «Показать изменения» (§25) — «было → стало» pairs under the stats line. */
+.changes-list {
+  margin: 6px 0 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-l);
+  background: var(--bg-panel);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  max-height: 240px;
+  overflow-y: auto;
+  font-size: 13px;
+}
+
+.change-row {
+  display: flex;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.change-from {
+  color: var(--danger);
+  text-decoration: line-through;
+  text-decoration-color: rgba(127, 127, 127, 0.5);
+  word-break: break-word;
+}
+
+.change-arrow {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.change-to {
+  color: var(--text);
+  word-break: break-word;
+}
+
+/* --- Icon copy buttons (v0.16): the word «Copy» is an icon everywhere
+       except the footer action buttons; each io field gets one below. --- */
+
+.field-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+}
+
+.field-wrap .text-area {
+  flex: 1;
+}
+
+.field-copy {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-icon-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-panel);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s, background 0.15s;
+}
+
+.btn-icon-copy:hover:not(:disabled) {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+.btn-icon-copy:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.btn-icon-copy.is-copied {
+  color: var(--accent);
+  border-color: var(--accent);
+}

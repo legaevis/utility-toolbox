@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+dist-electron/
+release/
+release-app/
+
+# Packaged artifacts & delivery junk (never source)
+/mac/
+/windows/
+*.app
+*.tar.gz
+*.zip
+_delivery/
+_to_delete/
+
+# One-off dev scripts from delivery sessions
+smoke*.mjs
+shot*.mjs
+
+# OS noise
+.DS_Store
+._*
+Thumbs.db
