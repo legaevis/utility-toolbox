@@ -1,0 +1,3 @@
+fe00686c19727d0cb292bc3cee35b0874ad96a6b8a10196122b1f3426afc657f  Utility-Toolbox-0.20.0-mac-arm64.zip
+4dac320079ac43926c6ba572ba158f047bb507071ad3c6391e28ea2fdaaf5872  Utility-Toolbox-0.20.0-portable-win-x64.exe
+8110e149f9f5fa069f9a96ef9cf0426e5f6ea23f34c49ac9f6d8df9425085248  Utility-Toolbox-Setup-0.20.0-win-x64.exe
